@@ -1,0 +1,31 @@
+
+[
+  {
+    "messageID": "1545704248",
+    "messageNumber": 1,
+    "recipient": "+27098765432",
+    "messageText": "hi john",
+    "messageHash": "15:1:HIJOHN"
+  },
+  {
+    "messageID": "2548266239",
+    "messageNumber": 2,
+    "recipient": "+27098765432",
+    "messageText": "hi",
+    "messageHash": "25:2:HIHI"
+  },
+  {
+    "messageID": "6454581785",
+    "messageNumber": 5,
+    "recipient": "+27098765432",
+    "messageText": "ll",
+    "messageHash": "64:5:LLLL"
+  },
+  {
+    "messageID": "8303628562",
+    "messageNumber": 6,
+    "recipient": "+27098765432",
+    "messageText": "aswe",
+    "messageHash": "83:6:ASWEASWE"
+  }
+]

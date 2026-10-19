@@ -41,7 +41,136 @@ public class POEPart1 {
         
         System.out.println(returnLoginStatus(loginSuccess, firstname, lastname));
       
+       
+if (loginSuccess) {
+    System.out.println("Welcome to QuickChat.");
+
+    MessageManager messageManager = new MessageManager();
+    int messageNumber = 0;
+    int messagesProcessed = 0;
+    int choice;
+
+    System.out.print("How many messages would you like to send? ");
+    int numberOfMessages = Integer.parseInt(input.nextLine());
+
+    do {
+        System.out.println("\n1. Send Messages");
+        System.out.println("2. Show recently sent messages");
+        System.out.println("3. Quit");
+        System.out.print("Choose an option: ");
+
+        choice = Integer.parseInt(input.nextLine());
+
+        switch (choice) {
+            case 1:
+                if (messagesProcessed >= numberOfMessages) {
+                    System.out.println("You have reached your message limit.");
+                    break;
+                }
+
+                System.out.println("\n--- New Message "
+                        + (messagesProcessed + 1) + " ---");
+
+                String messageID = Message.generateMessageId();
+
+                System.out.println("Message ID: " + messageID);
+                System.out.print("Enter recipient cell phone number: ");
+                String recipient = input.nextLine();
+
+                System.out.print("Enter your message: ");
+                String messageText = input.nextLine();
+
+                Message message = new Message(
+                        messageID,
+                        ++messageNumber,
+                        recipient,
+                        messageText
+                );
+
+                System.out.println(message.checkRecipientCell());
+
+                if (!recipient.matches("^\\+27[0-9]{9}$")) {
+                    System.out.println("Message was not sent.");
+                    messagesProcessed++;
+                    break;
+                }
+
+                String lengthCheck = message.checkMessageLength();
+                System.out.println(lengthCheck);
+
+                if (!lengthCheck.equals("Message ready to send.")) {
+                    System.out.println("Message was not sent.");
+                    messagesProcessed++;
+                    break;
+                }
+
+                System.out.println("Message length: " + messageText.length());
+
+                message.createMessageHash();
+
+                System.out.println("1) Send Message");
+                System.out.println("2) Disregard Message");
+                System.out.println("3) Store Message");
+                System.out.print("Choose an option: ");
+
+                int messageChoice = Integer.parseInt(input.nextLine());
+
+                switch (messageChoice) {
+                    case 1:
+                        System.out.println(message.SentMessage(1));
+                        messageManager.addMessage(message);
+                        break;
+
+                    case 2:
+                        System.out.println(message.SentMessage(2));
+                        System.out.print("Enter 0 to confirm deletion: ");
+                        int deleteChoice =
+                                Integer.parseInt(input.nextLine());
+
+                        if (deleteChoice == 0) {
+                            System.out.println("Message deleted successfully.");
+                        } else {
+                            System.out.println("Message was not deleted.");
+                        }
+                        break;
+
+                    case 3:
+                        System.out.println(message.storeMessage());
+                        messageManager.addMessage(message);
+                        break;
+
+                    default:
+                        System.out.println(
+                                "Invalid option. Please choose 1, 2, or 3."
+                        );
+                        break;
+                }
+
+                messagesProcessed++;
+                System.out.println("Messages processed: " + messagesProcessed);
+                break;
+
+            case 2:
+                System.out.println("Coming Soon.");
+                break;
+
+            case 3:
+                System.out.println("Goodbye!");
+                break;
+
+            default:
+                System.out.println("Invalid option. Please choose 1, 2, or 3.");
+                break;
+        }
+
+    } while (choice != 3);
+
+} else {
+    System.out.println("You must log in successfully to use QuickChat.");
+}
     }
+
+        
     // Regex reference: Oracle Java Documentation - Regular Expressions
 // https://docs.oracle.com/javase/tutorial/essential/regex/
     public static boolean checkCellPhoneNumber(String cellPhone) {
@@ -106,6 +235,65 @@ public class POEPart1 {
 }
         return password.length() >= 8 && hasCapital && hasNumber && hasSpecial;
     }
+    public static void showMessageReports(MessageManager messageManager,
+                                      Scanner input) {
+    int reportChoice;
+
+    do {
+        System.out.println("\n========== MESSAGE REPORTS ==========");
+        System.out.println("1. Display all messages");
+        System.out.println("2. Display longest message");
+        System.out.println("3. Search by message ID");
+        System.out.println("4. Search by recipient");
+        System.out.println("5. Delete a message");
+        System.out.println("6. Display total messages");
+        System.out.println("7. Return to main menu");
+        System.out.print("Choose an option: ");
+
+        reportChoice = Integer.parseInt(input.nextLine());
+
+        switch (reportChoice) {
+            case 1:
+                messageManager.printMessage();
+                break;
+
+            case 2:
+                messageManager.printLongestMessage();
+                break;
+
+            case 3:
+                System.out.print("Enter message ID: ");
+                String searchID = input.nextLine();
+                messageManager.searchMessageByID(searchID);
+                break;
+
+            case 4:
+                System.out.print("Enter recipient number: ");
+                String recipient = input.nextLine();
+                messageManager.searchMessageByRecipient(recipient);
+                break;
+
+            case 5:
+                System.out.print("Enter message ID to delete: ");
+                String deleteID = input.nextLine();
+                messageManager.deleteMessage(deleteID);
+                break;
+
+            case 6:
+                System.out.println("Total messages: "
+                        + messageManager.getTotalMessages());
+                break;
+
+            case 7:
+                System.out.println("Returning to QuickChat...");
+                break;
+
+            default:
+                System.out.println("Invalid option.");
+        }
+
+    } while (reportChoice != 7);
+}
 }
 
 
@@ -115,4 +303,3 @@ public class POEPart1 {
 
 
     
-
